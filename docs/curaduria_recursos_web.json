@@ -1,0 +1,118 @@
+{
+  "curaduria_recursos_web": {
+    "estado": "APROBADO",
+    "fecha_verificacion": "2026-09-22",
+    "biblioteca_consultada": true,
+    "resultado_biblioteca": "Catálogo ASD consultado: sin GLB/campus adecuados",
+    "knowledge_version": "2.7.0",
+    "knowledge_digest": "d6e9f4f9939698be71cbb2f4cad9bbf0f6ae2f0528acdf2a1fbd9dd52e2b7ba5",
+    "activos": [
+      {
+        "asset_id": "campus",
+        "funcion": "Estación académica: origen del talento",
+        "estado": "APROBADO",
+        "archivo": "assets/models/city/building-k.glb",
+        "archivo_original": "city/building-k.glb",
+        "proveedor": "Kenney",
+        "autor": "Kenney",
+        "pagina_activo_url": "https://kenney.nl/assets/city-kit-commercial",
+        "licencia_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "licencia_nombre": "CC0 1.0 Universal",
+        "evidencia_licencia": "assets/licenses/kenney-city.txt",
+        "fecha_verificacion": "2026-09-22",
+        "sha256": "afd36f573b9d6a6a890675aa0fbe762b29efb6258f322990752d79d9f0da42c6",
+        "bytes": 246976,
+        "puntuacion": 88,
+        "criterio_puntuacion": "Adecuación narrativa, coherencia del conjunto, peso y licencia; juicio editorial sobre 100",
+        "ultima_revision_visual": "APROBADA",
+        "evidencia_revision": "GLB originales renderizados e inspeccionados en la escena local; vistas de escritorio y móvil registradas en la conversación",
+        "uso_comercial_verificado": true,
+        "atribucion_requerida": false,
+        "texto_atribucion": "Modelos: Kenney (kenney.nl), CC0",
+        "costo": 0,
+        "modificaciones": "GLB original intacto; transformación y escala en escena. Palmera: materiales ajustados en memoria.",
+        "uso_final": "Presentación web pública de ASD; arquitectura conceptual"
+      },
+      {
+        "asset_id": "firma",
+        "funcion": "Estación ASD: práctica profesional supervisada",
+        "estado": "APROBADO",
+        "archivo": "assets/models/city/building-skyscraper-a.glb",
+        "archivo_original": "city/building-skyscraper-a.glb",
+        "proveedor": "Kenney",
+        "autor": "Kenney",
+        "pagina_activo_url": "https://kenney.nl/assets/city-kit-commercial",
+        "licencia_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "licencia_nombre": "CC0 1.0 Universal",
+        "evidencia_licencia": "assets/licenses/kenney-city.txt",
+        "fecha_verificacion": "2026-09-22",
+        "sha256": "d8339bbb75944ff91d1ec9a70ec6dead71bd98b94a42d3dd0fc1f3b107ddbe85",
+        "bytes": 111336,
+        "puntuacion": 87,
+        "criterio_puntuacion": "Adecuación narrativa, coherencia del conjunto, peso y licencia; juicio editorial sobre 100",
+        "ultima_revision_visual": "APROBADA",
+        "evidencia_revision": "GLB originales renderizados e inspeccionados en la escena local; vistas de escritorio y móvil registradas en la conversación",
+        "uso_comercial_verificado": true,
+        "atribucion_requerida": false,
+        "texto_atribucion": "Modelos: Kenney (kenney.nl), CC0",
+        "costo": 0,
+        "modificaciones": "GLB original intacto; transformación y escala en escena. Palmera: materiales ajustados en memoria.",
+        "uso_final": "Presentación web pública de ASD; arquitectura conceptual"
+      },
+      {
+        "asset_id": "palmera",
+        "funcion": "Contexto tropical sin añadir ruido narrativo",
+        "estado": "APROBADO",
+        "archivo": "assets/models/nature/tree_palmDetailedShort.glb",
+        "archivo_original": "nature/tree_palmDetailedShort.glb",
+        "proveedor": "Kenney",
+        "autor": "Kenney",
+        "pagina_activo_url": "https://kenney.nl/assets/nature-kit",
+        "licencia_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "licencia_nombre": "CC0 1.0 Universal",
+        "evidencia_licencia": "assets/licenses/kenney-nature.txt",
+        "fecha_verificacion": "2026-09-22",
+        "sha256": "bc1013aaacca3bdd116ad1cded4f9499f008fe3056e760f3238be05aa21ff9f2",
+        "bytes": 28212,
+        "puntuacion": 85,
+        "criterio_puntuacion": "Adecuación narrativa, coherencia del conjunto, peso y licencia; juicio editorial sobre 100",
+        "ultima_revision_visual": "APROBADA",
+        "evidencia_revision": "GLB originales renderizados e inspeccionados en la escena local; vistas de escritorio y móvil registradas en la conversación",
+        "uso_comercial_verificado": true,
+        "atribucion_requerida": false,
+        "texto_atribucion": "Modelos: Kenney (kenney.nl), CC0",
+        "costo": 0,
+        "modificaciones": "GLB original intacto; transformación y escala en escena. Palmera: materiales ajustados en memoria.",
+        "uso_final": "Presentación web pública de ASD; arquitectura conceptual"
+      }
+    ],
+    "riesgos_pendientes": [],
+    "handoff": "Recursos locales integrados en la primera escena; detalles y sustitución en ESCENA-3D.md",
+    "candidatos_no_seleccionados": [
+      {
+        "nombre": "Low Poly University / Ivan Norman",
+        "url": "https://sketchfab.com/3d-models/low-poly-university-a68d0b72205b49849ed1e6d6c3851749",
+        "motivo": "Licencia no comercial; no descargado"
+      },
+      {
+        "nombre": "Kenney Building Kit",
+        "url": "https://kenney.nl/assets/building-kit",
+        "motivo": "CC0, pero el conjunto City Kit cubre las estaciones con menos montaje; no descargado"
+      }
+    ],
+    "paquetes_originales": [
+      {
+        "archivo_local": "../work/recursos3d/city.zip",
+        "url": "https://kenney.nl/media/pages/assets/city-kit-commercial/a742d900eb-1753115042/kenney_city-kit-commercial_2.1.zip",
+        "sha256": "f8b09b081c2bb88bcc126e2dec1cb40fd0dad7e7e591b6c26aaefe96fb35276b",
+        "bytes": 4096974
+      },
+      {
+        "archivo_local": "../work/recursos3d/nature.zip",
+        "url": "https://kenney.nl/media/pages/assets/nature-kit/37ac38a37b-1677698939/kenney_nature-kit.zip",
+        "sha256": "fa7974a0d342bfe63c38664ba9f8ec1a4aab8ea25f099bdc56870e33588c4d9d",
+        "bytes": 10537521
+      }
+    ]
+  }
+}

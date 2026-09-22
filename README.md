@@ -85,3 +85,7 @@ Mantener commits por responsabilidad: `feat: ...`, `fix: ...`, `docs: ...`. No s
 El contenido es una **propuesta institucional**, no un convenio celebrado ni una convocatoria abierta. El reconocimiento como práctica, consultorio jurídico o judicatura debe validarse específicamente; no se promete equivalencia automática. No se inventan cupos, duración, remuneración, convenios ni contrataciones.
 
 Se generó una única escena ilustrativa de mentoría mediante Higgsfield. No representa empleados, instalaciones o clientes reales de ASD. La entrega web usa WebP local de aproximadamente 100 KB. Montserrat se distribuye bajo SIL Open Font License; ver `assets/fonts/OFL.txt`. Logo y contenidos institucionales pertenecen a ASD; su publicación no otorga una licencia de uso de marca. Ver [procedencia](docs/RECURSOS.md).
+
+## Recorrido 3D inicial
+
+La portada incluye una escena conceptual Universidad → Conexión → ASD con Three.js y GSAP locales. Explora las tres estaciones con botones o el deslizador. Contenido y cámaras: `data/scene.js`. Recursos, licencias, sustitución y pruebas: [ESCENA-3D.md](docs/ESCENA-3D.md). No requiere compilación.

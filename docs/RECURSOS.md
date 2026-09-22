@@ -15,3 +15,7 @@ Brief: escena editorial natural de una abogada colombiana adulta acompañando a 
 Conocimiento de marca validado con ASD Knowledge OS 2.7.0. Digest: `d6e9f4f9939698be71cbb2f4cad9bbf0f6ae2f0528acdf2a1fbd9dd52e2b7ba5`. Se consumieron únicamente organización y marca; no se publicó la base interna de conocimiento.
 
 Paleta: `#070909`, `#0D2318`, `#1A7A2E`, `#2AD660`, `#F5F7F6`, `#B9C4BE`. Logo preservado sin redibujarlo. La fotografía mantiene sus colores naturales.
+
+## Recursos 3D descargados
+
+Se añadieron tres modelos CC0 de Kenney (386.524 bytes en total) y su textura asociada. Fuentes, licencias, selección y propósito: [ESCENA-3D.md](ESCENA-3D.md). Registro con SHA-256: [curaduria_recursos_web.json](curaduria_recursos_web.json). Bibliotecas locales: Three.js 0.186.0 (MIT) y GSAP 3.15.0 (licencia estándar gratuita); avisos en `vendor/`.
