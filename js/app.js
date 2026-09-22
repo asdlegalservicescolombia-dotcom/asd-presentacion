@@ -3,7 +3,9 @@ import { renderPresentation } from './render.js';
 import { initNavigation } from './navigation.js';
 import { animateSlide } from './animations.js';
 import { initInteractions } from './interactions.js';
+import { initScene } from './scene.js';
 
 renderPresentation(presentation);
 initNavigation(presentation.sections, animateSlide);
 initInteractions(presentation);
+initScene();

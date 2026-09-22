@@ -1,3 +1,4 @@
+import { sceneContent } from '../data/scene.js';
 /** Renderizadores pequeños por tipo de capítulo. El contenido se trata siempre como texto. */
 export const escapeHTML = value => String(value ?? '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
 const lines = text => escapeHTML(text).replace(/\n/g, '<br>');
@@ -10,6 +11,22 @@ const paths = {
 export const icon = name => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true">${paths[name] || paths.spark}</svg>`;
 const heading = s => `<div class="section-heading"><p class="eyebrow">${escapeHTML(s.eyebrow)}</p><h1 tabindex="-1">${lines(s.title)}</h1><p class="section-description">${escapeHTML(s.description)}</p></div>`;
 
+function sceneMarkup(image) {
+  return `<div class="journey" data-scene data-scene-state="loading" role="region" aria-label="${escapeHTML(sceneContent.label)}">
+    <div class="journey-top"><span><i></i> EXPLORA LA ALIANZA</span><span data-scene-count>01 / 03</span></div>
+    <div class="journey-view">
+      <img class="journey-fallback" src="${escapeHTML(image.src)}" alt="${escapeHTML(image.alt)}" width="1344" height="752">
+      <span class="journey-image-credit">Imagen ilustrativa · Higgsfield</span>
+      <div class="journey-canvas" data-scene-canvas role="img" aria-label="Dos islas arquitectónicas con una universidad, una firma y un puente verde que las conecta."></div>
+      <div class="journey-place"><span>ACADEMIA</span><span>ASD</span></div>
+    </div>
+    <div class="journey-caption" aria-live="polite" aria-atomic="true"><h2 data-scene-title></h2><p data-scene-body></p></div>
+    <div class="journey-controls" role="group" aria-label="Puntos del recorrido">${sceneContent.stops.map((stop,i) => `<button data-scene-stop="${i}" aria-pressed="${i===0}"><span>0${i+1}</span>${escapeHTML(stop.label)}</button>`).join('')}</div>
+    <label class="sr-only" for="journey-progress">Mover la cámara por el recorrido</label><input id="journey-progress" data-scene-progress class="journey-progress" type="range" min="0" max="${sceneContent.stops.length-1}" step="0.01" value="0">
+    <div class="journey-note"><span data-scene-status>Cargando escenario…</span><span>${escapeHTML(sceneContent.note)}</span></div>
+  </div>`;
+}
+
 export function benefitsPanel(audience) {
   return `<h2 class="audience-heading">${escapeHTML(audience.heading)}</h2><div class="benefit-grid">${audience.items.map((item, i) => `<details class="benefit-card"><summary><span class="card-top">${icon(item.icon)}<span class="card-index">0${i + 1}</span></span><h3>${escapeHTML(item.title)}</h3><p>${escapeHTML(item.summary)}</p><span class="detail-label">Explorar beneficio <span class="expand-icon">+</span></span></summary><p class="benefit-detail">${escapeHTML(item.detail)}</p></details>`).join('')}</div>`;
 }
@@ -19,7 +36,7 @@ export function timelinePanel(step, index) {
 }
 
 const renderers = {
-  hero: s => `<div class="hero-copy"><p class="eyebrow"><span class="short-line"></span>${escapeHTML(s.eyebrow)}</p><h1 tabindex="-1">${s.title.split('\n').map(line => `<span class="${line === s.accent ? 'accent' : ''}">${escapeHTML(line)}</span>`).join('')}</h1><p class="hero-description">${escapeHTML(s.description)}</p><a class="button primary" href="#${escapeHTML(s.ctaTarget)}">${escapeHTML(s.cta)} <span>↗</span></a><div class="hero-tags">${s.tags.map(t => `<span>${escapeHTML(t)}</span>`).join('')}</div><p class="hero-note">${escapeHTML(s.note)}</p></div><figure class="hero-visual"><img src="${escapeHTML(s.image.src)}" alt="${escapeHTML(s.image.alt)}" width="1344" height="752" fetchpriority="high"><div class="visual-overlay"></div><figcaption><span class="image-kicker">EL CONOCIMIENTO COBRA VIDA</span><strong>${escapeHTML(s.image.caption)}</strong><small>${escapeHTML(s.image.credit)}</small></figcaption><div class="visual-corner" aria-hidden="true">ASD / FUTURO</div></figure>`,
+  hero: s => `<div class="hero-copy"><p class="eyebrow"><span class="short-line"></span>${escapeHTML(s.eyebrow)}</p><h1 tabindex="-1">${s.title.split('\n').map(line => `<span class="${line === s.accent ? 'accent' : ''}">${escapeHTML(line)}</span>`).join('')}</h1><p class="hero-description">${escapeHTML(s.description)}</p><a class="button primary" href="#${escapeHTML(s.ctaTarget)}">${escapeHTML(s.cta)} <span>↗</span></a><div class="hero-tags">${s.tags.map(t => `<span>${escapeHTML(t)}</span>`).join('')}</div><p class="hero-note">${escapeHTML(s.note)}</p></div>${sceneMarkup(s.image)}`,
   ecosystem: s => `${heading(s)}<div class="ecosystem">${s.nodes.map((n, i) => `<article class="ecosystem-node"><span class="node-number">0${i + 1}</span><p class="eyebrow">${escapeHTML(n.subtitle)}</p><h2>${escapeHTML(n.title)}</h2><ul>${n.items.map(t => `<li>${escapeHTML(t)}</li>`).join('')}</ul></article>${i === 0 ? '<div class="exchange" aria-label="Intercambio recíproco">⇄</div>' : ''}`).join('')}</div><div class="outcome"><span class="outcome-line"></span><p>${escapeHTML(s.outcome)}</p><div>${s.pillars.map(p => `<span>${escapeHTML(p)}</span>`).join('')}</div></div>`,
   benefits: s => `${heading(s)}<div class="segmented" role="tablist" aria-label="Beneficios por participante">${s.audiences.map((a, i) => `<button role="tab" id="tab-${escapeHTML(s.id)}-${i}" aria-controls="panel-${escapeHTML(s.id)}" aria-selected="${i === 0}" tabindex="${i === 0 ? '0' : '-1'}" data-audience="${i}">${escapeHTML(a.label)} <span>↗</span></button>`).join('')}</div><div class="benefits-panel" id="panel-${escapeHTML(s.id)}" role="tabpanel" aria-labelledby="tab-${escapeHTML(s.id)}-0">${benefitsPanel(s.audiences[0])}</div>`,
   timeline: s => `${heading(s)}<div class="timeline-tabs" role="tablist" aria-label="Etapas de la ruta">${s.steps.map((step, i) => `<button role="tab" id="step-${escapeHTML(s.id)}-${i}" aria-controls="timeline-${escapeHTML(s.id)}" aria-selected="${i === 0}" tabindex="${i === 0 ? '0' : '-1'}" data-step="${i}"><span>${String(i + 1).padStart(2, '0')}</span>${escapeHTML(step.label)}</button>`).join('')}</div><div class="timeline-panel" id="timeline-${escapeHTML(s.id)}" role="tabpanel" aria-labelledby="step-${escapeHTML(s.id)}-0">${timelinePanel(s.steps[0], 0)}</div><p class="fine-print timeline-note">${escapeHTML(s.note)}</p>`,
