@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="es-CO">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#070909">
+  <meta name="description" content="Una alianza para formar la próxima generación de abogados de Córdoba. Explora la propuesta de mentoría y práctica jurídica de ASD Servicios Legales.">
+  <title>Talento que trasciende · ASD Servicios Legales</title>
+  <link rel="icon" href="assets/icons/favicon.svg" type="image/svg+xml">
+  <link rel="preload" href="assets/fonts/montserrat-variable.ttf" as="font" type="font/ttf" crossorigin>
+  <link rel="stylesheet" href="css/styles.css">
+  <script type="module" src="js/app.js"></script>
+</head>
+<body>
+  <a href="#presentation" class="skip-link">Saltar a la presentación</a>
+  <header class="site-header">
+    <a href="#inicio" class="brand" aria-label="ASD Servicios Legales · Inicio"><img src="assets/logo/asd-logo.png" alt="ASD" width="90" height="58"></a>
+    <div class="header-title">ALIANZA FORMATIVA <span>MONTERÍA · CÓRDOBA</span></div>
+    <div class="header-actions"><button class="icon-button" id="help-button" aria-label="Ayuda y atajos de teclado">?</button><button class="icon-button fullscreen-button" id="fullscreen-button" aria-label="Activar pantalla completa" title="Pantalla completa (F)">⛶</button><span class="edition">PROPUESTA INSTITUCIONAL</span></div>
+  </header>
+  <div class="presentation-shell">
+    <nav class="chapter-nav" aria-label="Capítulos de la presentación" id="chapter-nav"></nav>
+    <main id="presentation" tabindex="-1"><noscript>Activa JavaScript para explorar esta presentación interactiva.</noscript></main>
+  </div>
+  <footer class="presentation-footer">
+    <div class="footer-context"><span class="status-dot"></span> EL FUTURO DEL DERECHO SE CONSTRUYE JUNTOS</div>
+    <div class="pagination"><span id="page-count" aria-live="polite" aria-atomic="true"></span><button class="nav-arrow" id="previous" aria-label="Capítulo anterior">←</button><button class="nav-arrow next" id="next" aria-label="Capítulo siguiente">→</button></div>
+    <div class="progress-track" aria-hidden="true"><div id="progress-bar"></div></div>
+  </footer>
+  <dialog id="help-dialog"><form method="dialog"><button class="dialog-close" aria-label="Cerrar ayuda">×</button></form><p class="eyebrow">A TU RITMO</p><h2>Cómo explorar</h2><dl class="shortcuts"><dt>← →</dt><dd>Cambiar de capítulo</dd><dt>Inicio / Fin</dt><dd>Ir al primer o último capítulo</dd><dt>F</dt><dd>Activar o salir de pantalla completa</dd><dt>Esc</dt><dd>Cerrar un panel o salir de pantalla completa</dd></dl><p>En el móvil, usa el menú de capítulos o las flechas inferiores. Explora los beneficios y la ruta tocando sus opciones.</p></dialog>
+  <dialog id="prompt-dialog"><form method="dialog"><button class="dialog-close" aria-label="Cerrar herramienta">×</button></form><p class="eyebrow">DE LA ESTRATEGIA A LA ACCIÓN</p><h2>Prepara la conversación.</h2><label for="prompt-format">¿Qué necesitas redactar?</label><select id="prompt-format"><option value="propuesta">Propuesta a una facultad</option><option value="convocatoria">Convocatoria para estudiantes</option><option value="carrusel">Carrusel de Instagram</option><option value="video">Guion de video</option></select><label for="prompt-output">Instrucción editable para tu herramienta de IA</label><textarea id="prompt-output" rows="10"></textarea><button class="button primary" id="copy-prompt">Copiar instrucción ↗</button><p id="copy-status" role="status"></p><p class="fine-print">Los textos generados requieren revisión institucional antes de su publicación.</p></dialog>
+  <p id="app-status" class="sr-only" role="status"></p>
+</body>
+</html>

@@ -1,0 +1,9 @@
+{
+  "name": "asd-presentacion",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Presentación interactiva de la alianza formativa ASD",
+  "scripts": { "start": "node scripts/serve.mjs", "test": "node --test" },
+  "engines": { "node": ">=20" }
+}
