@@ -53,5 +53,7 @@ export function initNavigation(sections, onChange) {
   window.addEventListener('popstate', restore);
   window.addEventListener('hashchange', restore);
   show(indexFromHash(location.hash, sections), { historyMode: 'replace', focus: false });
+  // Un enlace profundo puede activar el desplazamiento nativo después de renderizar.
+  window.addEventListener('load', () => window.scrollTo({ top: 0, behavior: 'instant' }), { once: true });
   return { show, get current() { return current; } };
 }

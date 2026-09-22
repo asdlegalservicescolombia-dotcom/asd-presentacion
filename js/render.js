@@ -29,7 +29,7 @@ const renderers = {
 
 export function renderPresentation(data) {
   const main = document.querySelector('#presentation');
-  main.innerHTML = data.sections.map((s, i) => `<section class="slide slide-${escapeHTML(s.type)}" id="${escapeHTML(s.id)}" aria-label="${escapeHTML(s.label)}" ${i ? 'hidden' : ''}>${renderers[s.type] ? renderers[s.type](s, data) : heading(s)}</section>`).join('');
+  main.innerHTML = data.sections.map((s, i) => `<section class="slide slide-${escapeHTML(s.type)}" id="slide-${escapeHTML(s.id)}" aria-label="${escapeHTML(s.label)}" ${i ? 'hidden' : ''}>${renderers[s.type] ? renderers[s.type](s, data) : heading(s)}</section>`).join('');
   document.querySelector('#chapter-nav').innerHTML = data.sections.map((s, i) => `<a class="chapter-link" href="#${escapeHTML(s.id)}" ${i ? '' : 'aria-current="step"'}><span class="chapter-number">${String(i + 1).padStart(2, '0')}</span><span>${escapeHTML(s.label)}</span><span class="chapter-indicator" aria-hidden="true"></span></a>`).join('');
   main.querySelectorAll('img').forEach(img => {
     const fail = () => {

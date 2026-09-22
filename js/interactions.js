@@ -24,7 +24,7 @@ function bindTabs(section, selector, update) {
 
 export function initInteractions(data) {
   data.sections.forEach(s => {
-    const section = document.getElementById(s.id);
+    const section = document.getElementById(`slide-${s.id}`);
     if (s.type === 'benefits') bindTabs(section, '[data-audience]', (i, tab) => {
       const panel = section.querySelector('[role="tabpanel"]');
       panel.innerHTML = benefitsPanel(s.audiences[i]); panel.setAttribute('aria-labelledby', tab.id);
