@@ -19,8 +19,8 @@ export const presentation = {
       title: 'Dos mundos.\nUna misma ambición.',
       description: 'Construir un ecosistema de simbiosis profesional: la academia aporta nuevas perspectivas; la firma las transforma en criterio, experiencia y práctica responsable.',
       nodes: [
-        { title: 'La academia', subtitle: 'CONOCIMIENTO QUE RENUEVA', items: ['Pensamiento jurídico actualizado', 'Investigación y mirada crítica', 'Nuevas herramientas tecnológicas'] },
-        { title: 'La firma', subtitle: 'EXPERIENCIA QUE FORMA', items: ['Mentoría de abogados titulados', 'Estrategia procesal y de litigio', 'Ética aplicada a decisiones reales'] }
+        { title: 'La academia', subtitle: 'Conocimiento que renueva.', body: 'El talento universitario aporta nuevas preguntas, investigación y perspectivas que enriquecen el trabajo del despacho.', items: ['Pensamiento jurídico actualizado', 'Investigación y mirada crítica', 'Nuevas herramientas tecnológicas'] },
+        { title: 'La firma', subtitle: 'Experiencia que forma.', body: 'El acompañamiento profesional conecta el aprendizaje académico con las decisiones, la responsabilidad y la exigencia de la práctica.', items: ['Mentoría de abogados titulados', 'Estrategia procesal y de litigio', 'Ética aplicada a decisiones reales'] }
       ],
       outcome: 'La próxima generación de abogados de Córdoba',
       pillars: ['Rigor jurídico', 'Ética profesional', 'Aprendizaje recíproco']
