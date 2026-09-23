@@ -1,0 +1,26 @@
+name: Importar historial ASD
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  importar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Restaurar los commits del proyecto y comprobar la presentación
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git bundle verify asd-presentacion-inmersiva-historial.bundle
+          git fetch ./asd-presentacion-inmersiva-historial.bundle refs/heads/main:refs/remotes/imported/main
+          git merge --allow-unrelated-histories -m "chore: import ASD development history" refs/remotes/imported/main
+          node --test
+          git rm asd-presentacion-inmersiva-historial.bundle
+          git commit -m "chore: remove completed history import package"
+          git push origin HEAD:main
