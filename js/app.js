@@ -6,6 +6,9 @@ import { initInteractions } from './interactions.js';
 import { initScene } from './scene.js';
 
 renderPresentation(presentation);
-initNavigation(presentation.sections, animateSlide);
+const scenes = initScene(presentation);
+initNavigation(presentation.sections, (slide) => {
+  animateSlide(slide);
+  scenes.show(slide);
+});
 initInteractions(presentation);
-initScene();

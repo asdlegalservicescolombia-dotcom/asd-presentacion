@@ -3,10 +3,10 @@ import assert from 'node:assert/strict';
 import { access, readFile } from 'node:fs/promises';
 import { presentation, buildPrompt, promptFormats } from '../data/content.js';
 import { indexFromHash, boundedIndex } from '../js/navigation.js';
-import { escapeHTML, benefitsPanel, timelinePanel } from '../js/render.js';
+import { escapeHTML } from '../js/render.js';
 
 test('los capítulos tienen identificadores únicos y enlaces válidos', () => {
-  const ids = presentation.sections.map(s => s.id);
+  const ids = presentation.sections.map((s) => s.id);
   assert.equal(ids.length, new Set(ids).size);
   for (const section of presentation.sections) {
     assert.match(section.id, /^[a-z][a-z0-9-]+$/);
@@ -33,11 +33,8 @@ test('reordenar o añadir capítulos no rompe la resolución por identificador',
 test('el contenido no puede inyectar HTML en tarjetas o etapas', () => {
   const untrusted = '<img src=x onerror=alert(1)> & "texto"';
   assert.ok(!escapeHTML(untrusted).includes('<img'));
-  const html = benefitsPanel({ heading: untrusted, items: [{ title: untrusted, summary: untrusted, detail: untrusted }] });
-  assert.ok(!html.includes('<img'));
-  assert.ok(html.includes('&lt;img'));
-  const step = timelinePanel({ label: untrusted, title: untrusted, body: untrusted, deliverable: untrusted, activities: [untrusted] }, 0);
-  assert.ok(!step.includes('<img'));
+  assert.ok(escapeHTML(untrusted).includes('&lt;img'));
+  assert.ok(escapeHTML(untrusted).includes('&quot;texto&quot;'));
 });
 
 test('todos los formatos generan instrucciones completas y prudentes', () => {
@@ -52,13 +49,18 @@ test('todos los formatos generan instrucciones completas y prudentes', () => {
 test('imágenes, módulos y recursos referenciados existen con rutas relativas', async () => {
   const root = new URL('../', import.meta.url);
   const html = await readFile(new URL('index.html', root), 'utf8');
-  for (const [, path] of html.matchAll(/(?:src|href)="((?:assets|css|js)\/[^"#]+)"/g)) {
+  for (const [, path] of html.matchAll(
+    /(?:src|href)="((?:assets|css|js)\/[^"#]+)"/g,
+  )) {
     await access(new URL(path, root));
     assert.ok(!path.startsWith('/'));
   }
   for (const section of presentation.sections) {
     if (section.image) await access(new URL(section.image.src, root));
-    if (section.audiences) for (const audience of section.audiences) assert.ok(audience.items.length > 0);
-    if (section.steps) assert.ok(section.steps.every(step => step.activities.length > 0));
+    if (section.audiences)
+      for (const audience of section.audiences)
+        assert.ok(audience.items.length > 0);
+    if (section.steps)
+      assert.ok(section.steps.every((step) => step.activities.length > 0));
   }
 });

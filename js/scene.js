@@ -1,76 +1,228 @@
-import { sceneContent } from '../data/scene.js';
+import { buildChapter, groupIndices } from '../data/chapters.js';
+import { escapeHTML, stopPanel } from './render.js';
 
-/** La presentación y sus controles siguen funcionando si falla WebGL o un modelo. */
-export function initScene() {
-  const root = document.querySelector('[data-scene]');
-  if (!root) return;
-  const buttons = [...root.querySelectorAll('[data-scene-stop]')];
-  const slider = root.querySelector('[data-scene-progress]');
+/** Dirección del recorrido: HTML accesible y un único motor compartido. */
+export function initScene(data) {
   const motion = matchMedia('(prefers-reduced-motion: reduce)');
-  let engine;
-  let position = 0;
-  let lastStop = -1;
-  let loading = false;
-  let active = false;
-
-  function select(value, animate = true) {
-    position = Math.max(0, Math.min(sceneContent.stops.length - 1, value));
-    const index = Math.round(position);
-    const stop = sceneContent.stops[index];
-    slider.value = position;
+  const states = data.sections.map((section) => ({
+    section,
+    chapter: buildChapter(section),
+    root: document.querySelector(`[data-scene="${section.id}"]`),
+    group: 0,
+    position: 0,
+    lastIndex: -1,
+  }));
+  let current,
+    engine,
+    loading,
+    failed = false,
+    timer = null;
+  function stopPlayback() {
+    clearInterval(timer);
+    timer = null;
+    states.forEach((s) => {
+      const button = s.root.querySelector('[data-scene-play]');
+      button.setAttribute('aria-pressed', 'false');
+      button.setAttribute('aria-label', 'Reproducir recorrido');
+      button.innerHTML = '▷ <span>Recorrer</span>';
+    });
+  }
+  function fallback(error) {
+    failed = true;
+    engine?.dispose();
+    states.forEach((s) => {
+      s.root.dataset.sceneState = 'fallback';
+      s.root.querySelector('[data-scene-status]').textContent =
+        'Vista conceptual';
+    });
+    console.warn(
+      'Se mantiene el recorrido accesible sin WebGL:',
+      error.message,
+    );
+  }
+  function renderControls(state) {
+    const ids = groupIndices(state.chapter, state.group);
+    state.root.querySelector('[data-scene-controls]').innerHTML = ids
+      .map(
+        (index, i) =>
+          `<button data-scene-stop="${index}" aria-pressed="false"><span>${String(i + 1).padStart(2, '0')}</span>${escapeHTML(state.chapter.stops[index].label)}</button>`,
+      )
+      .join('');
+    const slider = state.root.querySelector('[data-scene-progress]');
+    slider.min = ids[0];
+    slider.max = ids.at(-1);
+    state.root
+      .querySelectorAll('[data-scene-group]')
+      .forEach((button, i) =>
+        button.setAttribute('aria-pressed', String(i === state.group)),
+      );
+  }
+  function select(state, value, animate = true) {
+    const ids = groupIndices(state.chapter, state.group);
+    state.position = Math.min(ids.at(-1), Math.max(ids[0], value));
+    const index = Math.round(state.position),
+      stop = state.chapter.stops[index];
+    const slider = state.root.querySelector('[data-scene-progress]');
+    slider.value = state.position;
     slider.setAttribute('aria-valuetext', stop.label);
-    buttons.forEach((button, i) => button.setAttribute('aria-pressed', String(i === index)));
-    if (lastStop !== index) {
-      root.querySelector('[data-scene-title]').textContent = stop.title;
-      root.querySelector('[data-scene-body]').textContent = stop.body;
-      root.querySelector('[data-scene-count]').textContent = `${String(index + 1).padStart(2, '0')} / ${String(sceneContent.stops.length).padStart(2, '0')}`;
-      lastStop = index;
+    state.root
+      .querySelectorAll('[data-scene-stop]')
+      .forEach((button) =>
+        button.setAttribute(
+          'aria-pressed',
+          String(Number(button.dataset.sceneStop) === index),
+        ),
+      );
+    state.root.querySelector('[data-scene-count]').textContent =
+      `${String(index - ids[0] + 1).padStart(2, '0')} / ${String(ids.length).padStart(2, '0')}`;
+    if (state.lastIndex !== index) {
+      const panel = state.root.querySelector('[data-scene-copy]');
+      panel.innerHTML = stopPanel(stop, state.section, data);
+      state.lastIndex = index;
+      if (animate && !motion.matches)
+        panel.animate(
+          [
+            { opacity: 0.35, transform: 'translateY(8px)' },
+            { opacity: 1, transform: 'translateY(0)' },
+          ],
+          { duration: 360, easing: 'ease-out' },
+        );
     }
-    engine?.setProgress(position, animate && !motion.matches);
+    if (current === state)
+      engine?.setProgress(state.position, animate && !motion.matches);
   }
-  buttons.forEach((button, i) => button.addEventListener('click', () => select(i)));
-  slider.addEventListener('input', () => select(Number(slider.value), false));
-  // Las flechas operan el recorrido cuando el foco está dentro de sus controles.
-  root.addEventListener('keydown', event => {
-    if (event.target === slider) return;
-    const direction = { ArrowRight: 1, ArrowLeft: -1 }[event.key];
-    if (!direction) return;
-    event.preventDefault();
-    const next = Math.max(0, Math.min(buttons.length - 1, Math.round(position) + direction));
-    select(next);
-    buttons[next].focus();
-  });
-  motion.addEventListener('change', () => select(position, false));
-
   async function load() {
-    if (loading || engine) return;
-    loading = true;
+    if (failed) return;
+    if (engine) return;
+    if (!loading)
+      loading = (async () => {
+        if (!window.gsap)
+          await new Promise((resolve, reject) => {
+            const script = document.createElement('script');
+            script.src = new URL(
+              '../vendor/gsap/gsap.min.js',
+              import.meta.url,
+            ).href;
+            script.onload = resolve;
+            script.onerror = () => reject(new Error('Animación no disponible'));
+            document.head.append(script);
+          });
+        const { createScene } = await import('./scene-world.js');
+        engine = await createScene(fallback);
+      })();
     try {
-      if (!window.gsap) await new Promise((resolve, reject) => {
-        const script = document.createElement('script');
-        script.src = new URL('../vendor/gsap/gsap.min.js', import.meta.url).href;
-        script.onload = resolve;
-        script.onerror = () => reject(new Error('No se pudo cargar la animación'));
-        document.head.append(script);
-      });
-      const { createScene } = await import('./scene-world.js');
-      engine = await createScene(root.querySelector('[data-scene-canvas]'), sceneContent);
-      root.dataset.sceneState = 'ready';
-      root.querySelector('[data-scene-status]').textContent = 'Recorrido interactivo';
-      engine.setActive(active && !document.hidden);
-      select(position, false);
+      await loading;
     } catch (error) {
-      root.dataset.sceneState = 'fallback';
-      root.querySelector('[data-scene-status]').textContent = 'Recorrido ilustrado';
-      console.warn('Escenario 3D no disponible; se conserva el recorrido y su imagen.', error.message);
+      if (!failed) fallback(error);
     }
   }
-  const observer = new IntersectionObserver(entries => {
-    active = entries[0].isIntersecting;
-    engine?.setActive(active && !document.hidden);
-    if (active) load();
-  }, { threshold: 0.05 });
-  observer.observe(root);
-  document.addEventListener('visibilitychange', () => engine?.setActive(active && !document.hidden));
-  select(0, false);
+  function attach(state, animate) {
+    if (!engine || failed || state !== current) return;
+    state.root.dataset.sceneState = 'ready';
+    state.root.querySelector('[data-scene-status]').textContent =
+      'Recorrido interactivo';
+    engine.setActive(!document.hidden);
+    engine.attach(
+      state.root.querySelector('[data-scene-canvas]'),
+      state.chapter,
+      state.group,
+      state.position,
+      animate && !motion.matches,
+    );
+  }
+  states.forEach((state) => {
+    renderControls(state);
+    select(state, 0, false);
+    state.root.addEventListener('click', (event) => {
+      const step = event.target.closest('[data-scene-stop]'),
+        group = event.target.closest('[data-scene-group]'),
+        play = event.target.closest('[data-scene-play]');
+      if (step) {
+        stopPlayback();
+        select(state, Number(step.dataset.sceneStop));
+      }
+      if (group) {
+        stopPlayback();
+        state.group = Number(group.dataset.sceneGroup);
+        renderControls(state);
+        select(state, groupIndices(state.chapter, state.group)[0], false);
+        attach(state, true);
+      }
+      if (play) {
+        if (timer) {
+          stopPlayback();
+          return;
+        }
+        const ids = groupIndices(state.chapter, state.group);
+        if (Math.round(state.position) === ids.at(-1)) select(state, ids[0]);
+        play.setAttribute('aria-pressed', 'true');
+        play.setAttribute('aria-label', 'Pausar recorrido');
+        play.innerHTML = 'Ⅱ <span>Pausar</span>';
+        timer = setInterval(() => {
+          const ids = groupIndices(state.chapter, state.group);
+          const next = Math.round(state.position) + 1;
+          if (next > ids.at(-1)) {
+            stopPlayback();
+            return;
+          }
+          select(state, next);
+        }, 6500);
+      }
+    });
+    state.root
+      .querySelector('[data-scene-progress]')
+      .addEventListener('input', (event) => {
+        stopPlayback();
+        select(state, Number(event.target.value), false);
+      });
+    state.root.addEventListener('keydown', (event) => {
+      if (!event.target.closest('[data-scene-controls]')) return;
+      const ids = groupIndices(state.chapter, state.group);
+      let index;
+      if (event.key === 'ArrowRight')
+        index = Math.min(ids.at(-1), Math.round(state.position) + 1);
+      if (event.key === 'ArrowLeft')
+        index = Math.max(ids[0], Math.round(state.position) - 1);
+      if (event.key === 'Home') index = ids[0];
+      if (event.key === 'End') index = ids.at(-1);
+      if (index === undefined) return;
+      event.preventDefault();
+      stopPlayback();
+      select(state, index);
+      state.root.querySelector(`[data-scene-stop="${index}"]`).focus();
+    });
+  });
+  motion.addEventListener('change', () => {
+    stopPlayback();
+    if (current) select(current, current.position, false);
+  });
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) stopPlayback();
+    engine?.setActive(!document.hidden);
+  });
+  const visibility = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries)
+        if (
+          entry.target === current?.root.querySelector('[data-scene-canvas]')
+        ) {
+          engine?.setActive(entry.isIntersecting && !document.hidden);
+          if (!entry.isIntersecting) stopPlayback();
+        }
+    },
+    { threshold: 0.01 },
+  );
+  states.forEach((s) =>
+    visibility.observe(s.root.querySelector('[data-scene-canvas]')),
+  );
+  return {
+    async show(slide) {
+      stopPlayback();
+      current = states.find((s) => s.section.id === slide.id.slice(6));
+      if (!current) return;
+      const requested = current;
+      await load();
+      attach(requested, true);
+    },
+  };
 }
