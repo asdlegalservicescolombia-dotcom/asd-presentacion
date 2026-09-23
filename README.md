@@ -25,8 +25,11 @@ adecuado para los módulos y modelos. Node se usa solo durante desarrollo.
 - Cada capítulo tiene una escena y botones para sus momentos narrativos.
 - Beneficios: elegir firma o estudiante y explorar sus cuatro beneficios.
 - El deslizador coordina la cámara y la selección del contenido.
-- «Recorrer» avanza cada 6,5 segundos; «Pausar» detiene el avance. Una selección
-  manual o cambio de capítulo también detiene la reproducción.
+- El recorrido arranca automáticamente al entrar en cada capítulo y avanza cada
+  6,5 segundos, repitiendo sus momentos. «Pausar» o una selección manual detienen
+  el avance. «Recorrer» lo reanuda. Al cambiar de capítulo comienza su recorrido.
+- Al ocultar la página o el capítulo, se suspende y después se reanuda si no se
+  había pausado manualmente. El movimiento reducido desactiva el inicio automático.
 - Flechas del teclado: capítulos; dentro de los botones de un recorrido, momentos.
   Inicio/Fin funcionan dentro del contexto activo. F activa pantalla completa.
 - En el cierre, «Preparar una propuesta» abre el prompt editable. No envía mensajes.

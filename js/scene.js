@@ -11,13 +11,15 @@ export function initScene(data) {
     group: 0,
     position: 0,
     lastIndex: -1,
+    visible: false,
+    wantsPlayback: false,
   }));
   let current,
     engine,
     loading,
     failed = false,
     timer = null;
-  function stopPlayback() {
+  function suspendPlayback() {
     clearInterval(timer);
     timer = null;
     states.forEach((s) => {
@@ -27,7 +29,33 @@ export function initScene(data) {
       button.innerHTML = '▷ <span>Recorrer</span>';
     });
   }
+  function stopPlayback() {
+    if (current) current.wantsPlayback = false;
+    suspendPlayback();
+  }
+  function startPlayback(state) {
+    if (
+      timer ||
+      state !== current ||
+      !state.wantsPlayback ||
+      !state.visible ||
+      document.hidden ||
+      !engine ||
+      failed
+    )
+      return;
+    const button = state.root.querySelector('[data-scene-play]');
+    button.setAttribute('aria-pressed', 'true');
+    button.setAttribute('aria-label', 'Pausar recorrido');
+    button.innerHTML = 'Ⅱ <span>Pausar</span>';
+    timer = setInterval(() => {
+      const ids = groupIndices(state.chapter, state.group);
+      const next = Math.round(state.position) + 1;
+      select(state, next > ids.at(-1) ? ids[0] : next);
+    }, 6500);
+  }
   function fallback(error) {
+    stopPlayback();
     failed = true;
     engine?.dispose();
     states.forEach((s) => {
@@ -142,31 +170,22 @@ export function initScene(data) {
         select(state, Number(step.dataset.sceneStop));
       }
       if (group) {
+        const wasPlaying = state.wantsPlayback;
         stopPlayback();
         state.group = Number(group.dataset.sceneGroup);
         renderControls(state);
         select(state, groupIndices(state.chapter, state.group)[0], false);
         attach(state, true);
+        state.wantsPlayback = wasPlaying;
+        startPlayback(state);
       }
       if (play) {
         if (timer) {
           stopPlayback();
           return;
         }
-        const ids = groupIndices(state.chapter, state.group);
-        if (Math.round(state.position) === ids.at(-1)) select(state, ids[0]);
-        play.setAttribute('aria-pressed', 'true');
-        play.setAttribute('aria-label', 'Pausar recorrido');
-        play.innerHTML = 'Ⅱ <span>Pausar</span>';
-        timer = setInterval(() => {
-          const ids = groupIndices(state.chapter, state.group);
-          const next = Math.round(state.position) + 1;
-          if (next > ids.at(-1)) {
-            stopPlayback();
-            return;
-          }
-          select(state, next);
-        }, 6500);
+        state.wantsPlayback = true;
+        startPlayback(state);
       }
     });
     state.root
@@ -197,32 +216,34 @@ export function initScene(data) {
     if (current) select(current, current.position, false);
   });
   document.addEventListener('visibilitychange', () => {
-    if (document.hidden) stopPlayback();
-    engine?.setActive(!document.hidden);
+    if (document.hidden) suspendPlayback();
+    else if (current) startPlayback(current);
+    engine?.setActive(!document.hidden && current?.visible);
   });
   const visibility = new IntersectionObserver(
     (entries) => {
-      for (const entry of entries)
-        if (
-          entry.target === current?.root.querySelector('[data-scene-canvas]')
-        ) {
-          engine?.setActive(entry.isIntersecting && !document.hidden);
-          if (!entry.isIntersecting) stopPlayback();
-        }
+      for (const entry of entries) {
+        const state = states.find((s) => s.root === entry.target);
+        state.visible = entry.isIntersecting;
+        if (state !== current) continue;
+        engine?.setActive(entry.isIntersecting && !document.hidden);
+        if (!entry.isIntersecting) suspendPlayback();
+        else startPlayback(state);
+      }
     },
     { threshold: 0.01 },
   );
-  states.forEach((s) =>
-    visibility.observe(s.root.querySelector('[data-scene-canvas]')),
-  );
+  states.forEach((s) => visibility.observe(s.root));
   return {
     async show(slide) {
       stopPlayback();
       current = states.find((s) => s.section.id === slide.id.slice(6));
       if (!current) return;
       const requested = current;
+      requested.wantsPlayback = !motion.matches;
       await load();
       attach(requested, true);
+      startPlayback(requested);
     },
   };
 }

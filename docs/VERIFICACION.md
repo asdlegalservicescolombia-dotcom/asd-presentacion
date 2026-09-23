@@ -41,3 +41,11 @@ a nivel de sistema/GPU. El fallo de recurso sí se probó de extremo a extremo.
 Las advertencias durante la retirada deliberada del modelo son esperadas. La
 versión con recursos restaurados funciona sin errores nuevos de aplicación.
 La publicación pública en GitHub Pages sigue pendiente de completar el acceso.
+
+## Inicio automático del recorrido
+
+Cada capítulo inicia su reproducción al quedar visible, con avance cada 6,5
+segundos y repetición al llegar al final del grupo. La selección manual o Pausar
+cancelan la reproducción; salir de la vista solo la suspende. La preferencia de
+movimiento reducido conserva inicio manual. Se observó avance automático del
+cierre y funcionamiento del botón de pausa. Las 13 pruebas existentes pasan.
