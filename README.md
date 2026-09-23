@@ -96,7 +96,7 @@ una vista conceptual HTML/CSS. La imagen de mentoría tiene texto alternativo.
 node --test
 ```
 
-Trece pruebas verifican conservación del contenido, las ramas de beneficios,
+Quince pruebas verifican conservación del contenido, las ramas de beneficios,
 IDs/enlaces, escape de HTML, modelos GLB, texturas y dependencias locales.
 Revisar además las seis escenas, móvil, teclado, reproducción y recuperación.
 Evidencia y límites: [verificación](docs/VERIFICACION.md).
@@ -106,12 +106,11 @@ Evidencia y límites: [verificación](docs/VERIFICACION.md).
 Preparado para publicación estática desde `main`, carpeta `/(root)`, mediante
 Settings → Pages → Deploy from a branch. Todas las rutas son relativas.
 
-Repositorio previsto: https://github.com/asdlegalservicescolombia-dotcom/asd-presentacion
+Repositorio: https://github.com/asdlegalservicescolombia-dotcom/asd-presentacion
 
-URL prevista: https://asdlegalservicescolombia-dotcom.github.io/asd-presentacion/
+Dirección pública de GitHub Pages: https://asdlegalservicescolombia-dotcom.github.io/asd-presentacion/
 
-La subida y publicación pública siguen pendientes del acceso autorizado a GitHub.
-La URL local funciona; no presentar la dirección pública como un despliegue activo.
+La publicación se configura desde Settings → Pages. El estado del despliegue se consulta en Actions.
 
 ## Recursos y contenido
 
