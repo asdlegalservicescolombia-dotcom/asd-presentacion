@@ -1,91 +1,114 @@
 # ASD · Talento que trasciende
 
-Presentación web interactiva de la propuesta de alianza formativa de **ASD Servicios Legales** con facultades de Derecho de Montería y la región. Desarrollada con HTML, CSS y módulos JavaScript nativos. Sin dependencias de producción, servicios de pago para alojar la web ni proceso de compilación.
+Presentación institucional interactiva de ASD Servicios Legales para una alianza
+formativa con facultades de Derecho de Montería y la región. **Seis escenarios 3D,
+25 momentos narrativos**, contenido editable y navegación accesible.
 
-## Ejecutar localmente
+HTML, CSS y JavaScript modular. Three.js y GSAP están incluidos localmente en
+`vendor/`; no hay CDN, API de IA en producción, backend ni compilación.
 
-Requisito de desarrollo: Node.js 20 o superior (gratuito).
+## Ejecutar
+
+Con Node.js 20 o superior, desde esta carpeta:
 
 ```sh
-git clone https://github.com/asdlegalservicescolombia-dotcom/asd-presentacion.git
-cd asd-presentacion
-npm start
+node scripts/serve.mjs
 ```
 
-Abrir **http://127.0.0.1:4173/asd-presentacion/**. No hace falta `npm install`. También funciona con cualquier servidor HTTP estático, por ejemplo `python -m http.server 4173` desde la carpeta del proyecto.
+Abrir http://127.0.0.1:4173/asd-presentacion/. También admite `npm start` si npm
+está instalado. No requiere `npm install`. Usar un servidor HTTP: `file://` no es
+adecuado para los módulos y modelos. Node se usa solo durante desarrollo.
 
-Usar un servidor HTTP: abrir `index.html` mediante `file://` no carga módulos JavaScript de forma fiable. Node.js se usa únicamente para desarrollo; el sitio publicado se ejecuta en el navegador.
+## Explorar
 
-## Presentar
+- Seis capítulos: visión, propósito, beneficios, formación, talento y alianza.
+- Cada capítulo tiene una escena y botones para sus momentos narrativos.
+- Beneficios: elegir firma o estudiante y explorar sus cuatro beneficios.
+- El deslizador coordina la cámara y la selección del contenido.
+- «Recorrer» avanza cada 6,5 segundos; «Pausar» detiene el avance. Una selección
+  manual o cambio de capítulo también detiene la reproducción.
+- Flechas del teclado: capítulos; dentro de los botones de un recorrido, momentos.
+  Inicio/Fin funcionan dentro del contexto activo. F activa pantalla completa.
+- En el cierre, «Preparar una propuesta» abre el prompt editable. No envía mensajes.
 
-- Seis capítulos con enlaces directos: `#inicio`, `#proposito`, `#beneficios`, `#ruta`, `#talento`, `#alianza`.
-- Flechas izquierda/derecha o botones inferiores para avanzar. Inicio/Fin van al primer/último capítulo.
-- **F** o el botón superior activa pantalla completa cuando el navegador lo permite.
-- En beneficios, cambiar entre firma/estudiante y desplegar cada tarjeta.
-- En la ruta, seleccionar una de las cuatro etapas. Las flechas funcionan dentro de cada grupo de pestañas.
-- En el cierre, abrir «Preparar una propuesta» para adaptar y copiar el prompt por formato. Esto no llama a una API de IA ni envía mensajes.
-- La navegación respeta Atrás/Adelante del navegador y preferencias de movimiento reducido. En pantallas pequeñas el contenido tiene desplazamiento vertical y los controles inferiores permanecen visibles.
+En móvil, la escena y sus controles aparecen antes de la explicación. El texto
+es HTML, no está incrustado en el 3D. Se respeta el movimiento reducido del sistema.
 
-## Estructura
+## Arquitectura
 
-```text
-asd-presentacion/
-├── index.html               # Estructura general, controles y diálogos
-├── css/styles.css           # Identidad, componentes y responsive
-├── js/
-│   ├── app.js               # Inicialización
-│   ├── render.js            # Plantillas por tipo de capítulo
-│   ├── navigation.js        # Navegación, URL, foco y teclado
-│   ├── animations.js        # Animaciones con movimiento reducido
-│   └── interactions.js      # Pestañas, pantalla completa y prompt
-├── data/content.js          # Textos, capítulos, enlaces y rutas de imagen
-├── assets/
-│   ├── images/              # Imágenes optimizadas
-│   ├── videos/              # Carpeta reservada; sin videos innecesarios
-│   ├── icons/               # Favicon SVG; iconos pequeños en render.js
-│   ├── logo/                # PNG oficial
-│   └── fonts/               # Montserrat local y licencia OFL
-├── scripts/serve.mjs        # Servidor local sin dependencias
-├── tests/content.test.js    # Contratos de contenido, rutas y navegación
-├── docs/                    # Mantenimiento, procedencia y verificación
-├── package.json
-└── .nojekyll                # Publicación estática en GitHub Pages
+| Archivo | Responsabilidad |
+|---|---|
+| `data/content.js` | Información institucional, capítulos, beneficios y actividades |
+| `data/scene.js` | Modelos y momentos de la portada |
+| `data/chapters.js` | Adaptación del contenido a momentos y configuración de encuadres |
+| `js/render.js` | HTML accesible de capítulos y paneles |
+| `js/navigation.js` | URL, historial, foco, capítulos y teclado |
+| `js/scene.js` | Selección, reproducción, ramas y carga del motor |
+| `js/scene-world.js` | Único renderizador, caché, cámaras y ciclo de vida |
+| `js/scene-worlds.js` | Seis escenografías, objetos y respuesta visual |
+| `js/animations.js` | Entrada de capítulos |
+| `js/interactions.js` | Diálogos, pantalla completa y prompt |
+| `css/styles.css` | Marca, navegación y componentes compartidos |
+| `css/scene.css` | Presentación inmersiva y adaptación responsive |
+| `assets/models/` | Tres modelos Kenney CC0 y textura asociada |
+| `assets/images/` | Fotografía ilustrativa de mentoría, generada con Higgsfield |
+| `assets/logo/`, `assets/fonts/` | Logo oficial y Montserrat local |
+| `vendor/` | Three.js 0.186.0 y GSAP 3.15.0, con avisos de licencia |
+| `tests/` | Contratos de contenido, navegación y recursos |
+
+## Editar
+
+Modificar `data/content.js` y recargar. El orden de `sections` define los capítulos.
+No se necesita recompilar. Mantener IDs únicos y actualizar los `ctaTarget` si se
+elimina una sección. Los seis tipos existentes se pueden reutilizar.
+
+La adaptación conserva los detalles y condiciones institucionales al distribuirlos
+entre los momentos. Sustituir una imagen o un texto no requiere editar el motor.
+Los modelos se cambian en `data/scene.js`; sus proporciones y disposición se ajustan
+en `scene-worlds.js` cuando sea necesario. Los encuadres están en `worldContent`
+(`data/chapters.js`). Ver [mantenimiento](docs/MANTENIMIENTO.md).
+
+## Rendimiento y recuperación
+
+Se crea un solo contexto WebGL y se mueve su lienzo al capítulo visible. Los
+modelos se descargan una vez y los mundos se reutilizan. No se renderiza
+continuamente: solo durante transiciones, cambios o redimensionamiento. Al ocultar
+la escena se pausa el motor; en móvil se limita la densidad y se omiten sombras.
+
+Si falla un modelo o WebGL, los controles y la información siguen funcionando con
+una vista conceptual HTML/CSS. La imagen de mentoría tiene texto alternativo.
+
+## Pruebas
+
+```sh
+node --test
 ```
 
-## Editar sin reconstruir la aplicación
-
-Modificar **`data/content.js`** y recargar. Cada capítulo tiene un `id` único y estable, un `type`, título, descripción y datos específicos. El arreglo `sections` define el orden y el número de capítulos; menú, contador y progreso se actualizan automáticamente.
-
-Para añadir una sección, duplicar una del mismo tipo y cambiar su `id`. Para retirarla, eliminarla del arreglo y actualizar cualquier `ctaTarget` que la apunte. Los tipos disponibles son `hero`, `ecosystem`, `benefits`, `timeline`, `profile` y `closing`. Un tipo nuevo usa una cabecera básica hasta añadir su renderizador en `js/render.js`.
-
-Cambiar una imagen: reemplazar el archivo manteniendo el nombre, o modificar `image.src`, `image.alt` y `image.credit` en los datos. Evitar rutas que empiecen por `/`: GitHub Pages sirve este proyecto bajo `/asd-presentacion/`. No incrustar información de clientes en imágenes o datos públicos. Una imagen ausente muestra una descripción y conserva la navegación.
-
-Los videos no son necesarios para esta versión. Para añadir uno con propósito narrativo, guardar un MP4/WebM optimizado en `assets/videos/` y añadir un renderizador con controles, `poster`, `preload="none"` y subtítulos cuando haya voz. Ninguna dependencia ni reconstrucción es necesaria. Ver [mantenimiento](docs/MANTENIMIENTO.md).
+Trece pruebas verifican conservación del contenido, las ramas de beneficios,
+IDs/enlaces, escape de HTML, modelos GLB, texturas y dependencias locales.
+Revisar además las seis escenas, móvil, teclado, reproducción y recuperación.
+Evidencia y límites: [verificación](docs/VERIFICACION.md).
 
 ## GitHub Pages
 
-En el repositorio: **Settings → Pages → Build and deployment → Deploy from a branch → main → /(root) → Save**. Los archivos estáticos se publican desde la raíz. No se necesita un workflow, Jekyll ni una cuenta de hosting adicional.
+Preparado para publicación estática desde `main`, carpeta `/(root)`, mediante
+Settings → Pages → Deploy from a branch. Todas las rutas son relativas.
 
-Dirección prevista de publicación: **https://asdlegalservicescolombia-dotcom.github.io/asd-presentacion/**. Comprobar el estado del despliegue antes de compartirla. Cada commit posterior a `main` vuelve a publicar el contenido una vez habilitado Pages.
+Repositorio previsto: https://github.com/asdlegalservicescolombia-dotcom/asd-presentacion
 
-Guía oficial: [configurar la fuente de publicación de GitHub Pages](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site).
+URL prevista: https://asdlegalservicescolombia-dotcom.github.io/asd-presentacion/
 
-## Verificar cambios
+La subida y publicación pública siguen pendientes del acceso autorizado a GitHub.
+La URL local funciona; no presentar la dirección pública como un despliegue activo.
 
-```sh
-npm test
-```
+## Recursos y contenido
 
-Después revisar en navegador: capítulos, Atrás/Adelante, enlaces directos, pestañas con teclado, tarjetas, diálogo y tamaños móvil/escritorio. Ver [registro de verificación](docs/VERIFICACION.md).
+Los modelos de Kenney son CC0; las nuevas geometrías son código propio del proyecto.
+Three.js es MIT; GSAP usa su licencia estándar gratuita, no MIT. Montserrat es OFL.
+El logo y los contenidos institucionales pertenecen a ASD. Fuentes y licencias:
+[recursos](docs/RECURSOS.md) y [escenas](docs/ESCENA-3D.md).
 
-Mantener commits por responsabilidad: `feat: ...`, `fix: ...`, `docs: ...`. No subir archivos de trabajo, secretos o la imagen original sin optimizar. Las ramas de trabajo y pull requests permiten revisar cambios futuros antes de llevarlos a `main`.
-
-## Contenido y recursos
-
-El contenido es una **propuesta institucional**, no un convenio celebrado ni una convocatoria abierta. El reconocimiento como práctica, consultorio jurídico o judicatura debe validarse específicamente; no se promete equivalencia automática. No se inventan cupos, duración, remuneración, convenios ni contrataciones.
-
-Se generó una única escena ilustrativa de mentoría mediante Higgsfield. No representa empleados, instalaciones o clientes reales de ASD. La entrega web usa WebP local de aproximadamente 100 KB. Montserrat se distribuye bajo SIL Open Font License; ver `assets/fonts/OFL.txt`. Logo y contenidos institucionales pertenecen a ASD; su publicación no otorga una licencia de uso de marca. Ver [procedencia](docs/RECURSOS.md).
-
-## Recorrido 3D inicial
-
-La portada incluye una escena conceptual Universidad → Conexión → ASD con Three.js y GSAP locales. Explora las tres estaciones con botones o el deslizador. Contenido y cámaras: `data/scene.js`. Recursos, licencias, sustitución y pruebas: [ESCENA-3D.md](docs/ESCENA-3D.md). No requiere compilación.
+Es una propuesta institucional: no un convenio celebrado ni una convocatoria
+abierta. Se conservan las condiciones sobre supervisión, reconocimiento académico
+y ausencia de promesa de contratación. Los edificios son conceptuales; la imagen
+IA no representa empleados, instalaciones ni clientes reales.

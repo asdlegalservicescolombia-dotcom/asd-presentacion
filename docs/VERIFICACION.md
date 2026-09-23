@@ -1,45 +1,43 @@
-# Registro de verificación
+# Verificación · presentación inmersiva completa
 
-Fecha: 22 de septiembre de 2026.
+Fecha: 2026-09-22. Entorno: navegador integrado de Codex sobre Windows.
 
-## Pruebas automáticas
+## Automatización
 
-`node --test`: **6 pruebas aprobadas, 0 fallos**.
+`node --test`: **13 pruebas aprobadas**. Cubren:
 
-- Identificadores de capítulos únicos y destinos de navegación válidos.
-- Enlaces desconocidos y codificación malformada recuperados sin excepción.
-- Límites de navegación y reordenación/adición de capítulos.
-- Escape del texto editorial para impedir inyección de HTML en tarjetas y etapas.
-- Cuatro formatos de prompt con información y límites institucionales.
-- Existencia de imágenes, estilos y módulos con rutas relativas.
+- Seis capítulos y 25 momentos de contenido.
+- Conservación de beneficios (8), actividades, resultados, competencias y condiciones.
+- Separación de grupos al agregar un beneficio y reordenación de secciones.
+- Escape del contenido editable y conservación del contacto/CTA.
+- Navegación por hash, IDs únicos, límites y enlaces malformados.
+- GLB válidos, texturas externas y dependencias locales con licencias.
+- Encuadres numéricos válidos y presupuesto de los modelos inferior a 500 KB.
 
-Sintaxis verificada con `node --check` en los módulos de aplicación, interacciones, navegación y renderizado.
+## Pruebas en navegador
 
-## Navegador
+- Inspección visual de los seis escenarios en escritorio (1440 × 1000).
+- Recorrido entre capítulos, ambas ramas de beneficios y distintos momentos.
+- Reproducción automática observada: avanzó por las competencias; pausa funcionó.
+- Teclado End en los controles de alianza: pasó a Construir el plan sin cambiar
+  de capítulo. Home en su deslizador: volvió al primer momento.
+- Prompt de propuesta abierto después de cambiar el momento de cierre: contenido
+  completo y herramienta operativa. No se enviaron correos ni solicitudes.
+- Anchos 390 × 844 y 320 × 740. En la prueba de 320, los seis capítulos registraron
+  ancho de documento igual al visible (305 CSS px más barra de desplazamiento),
+  sin bloques h1/h2/p/button/li con desbordamiento horizontal medido.
+- Un único canvas en el DOM durante los cambios entre los seis capítulos.
+- Fotografía de mentoría separada de la escenografía para evitar superposición.
+- GLB académico retirado temporalmente: vista conceptual, paneles y navegación
+  siguieron funcionando. Restaurado y verificada nuevamente la carga 3D.
 
-Revisión en Chrome y navegador integrado de Codex:
+## Límites de la comprobación
 
-- Los seis enlaces del menú muestran un solo capítulo a la vez.
-- Flechas de navegación, teclas de avance y Atrás del navegador funcionan.
-- Primer y último capítulo deshabilitan el control que no corresponde.
-- Selector de beneficios cambia firma/estudiante; tarjetas despliegan detalles.
-- Ruta permite seleccionar etapas por clic y por flechas dentro de las pestañas.
-- Diálogo de propuestas cambia formato, genera el texto y confirma la copia al portapapeles.
-- Escape cierra el diálogo y devuelve el foco al control que lo abrió.
-- El botón de pantalla completa responde al cambio de estado del navegador.
-- Logo e imagen de apertura se cargan correctamente.
-- No se observaron errores o advertencias de aplicación en la consola revisada de Chrome.
+Responsive probado con emulación de viewport, no con teléfono físico. No se ha
+medido una tasa de FPS ni aplicado un benchmark de GPU. La preferencia de movimiento
+reducido y la pérdida de contexto están manejadas en código, pero no se han forzado
+a nivel de sistema/GPU. El fallo de recurso sí se probó de extremo a extremo.
 
-## Responsive y revisión visual
-
-- **390 × 844:** recorridos por los seis capítulos sin desbordamiento horizontal; un capítulo visible en cada cambio. Portada inspeccionada visualmente.
-- **320 × 740:** cierre sin desbordamiento horizontal.
-- **1440 × 900:** portada inspeccionada visualmente, identidad y fotografía cargadas, sin desbordamiento horizontal.
-- El control de tamaño de Chrome no aplicó el tamaño solicitado; las medidas responsive anteriores se comprobaron en el navegador integrado de Codex.
-- En ventanas de baja altura, la página permite desplazamiento vertical y conserva los controles inferiores visibles.
-
-## Límites de la revisión
-
-No es una auditoría WCAG completa ni una prueba en dispositivos físicos iOS/Android. Se revisó la implementación del movimiento reducido; no se modificó la preferencia de accesibilidad del sistema. El correo usa `mailto:` y requiere una aplicación de correo configurada. El prompt no envía comunicaciones ni genera contenido en un servicio externo por sí solo.
-
-El estado de GitHub Pages debe verificarse en el repositorio y su URL publicada; estas pruebas locales no sustituyen la comprobación del despliegue.
+Las advertencias durante la retirada deliberada del modelo son esperadas. La
+versión con recursos restaurados funciona sin errores nuevos de aplicación.
+La publicación pública en GitHub Pages sigue pendiente de completar el acceso.

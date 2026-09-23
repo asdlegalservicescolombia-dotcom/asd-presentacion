@@ -19,3 +19,10 @@ Paleta: `#070909`, `#0D2318`, `#1A7A2E`, `#2AD660`, `#F5F7F6`, `#B9C4BE`. Logo p
 ## Recursos 3D descargados
 
 Se añadieron tres modelos CC0 de Kenney (386.524 bytes en total) y su textura asociada. Fuentes, licencias, selección y propósito: [ESCENA-3D.md](ESCENA-3D.md). Registro con SHA-256: [curaduria_recursos_web.json](curaduria_recursos_web.json). Bibliotecas locales: Three.js 0.186.0 (MIT) y GSAP 3.15.0 (licencia estándar gratuita); avisos en `vendor/`.
+
+## Extensión a toda la presentación
+
+Los seis capítulos usan ahora mundos propios. Las nuevas mesas, documentos,
+libros, reloj, portátil, escudo, brújula y conexiones se construyen por código en
+`js/scene-worlds.js`; no se descargaron ni generaron recursos adicionales. Se
+reutilizan los modelos CC0 y la imagen Higgsfield existente. Ver `ESCENA-3D.md`.
