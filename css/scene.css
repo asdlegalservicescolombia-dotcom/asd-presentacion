@@ -667,3 +667,33 @@
     color: #222;
   }
 }
+.tour-button {
+  min-height: 38px;
+  padding: 9px 16px;
+  border: 1px solid var(--accent);
+  border-radius: 4px;
+  color: var(--accent);
+  background: #153c28;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.tour-button[aria-pressed='true'] {
+  background: #24653c;
+  color: #fff;
+}
+.tour-button:hover {
+  background: #24653c;
+}
+@media (max-width: 400px) {
+  .presentation-footer {
+    padding-inline: 10px;
+    gap: 6px;
+  }
+  .tour-button {
+    padding-inline: 8px;
+    font-size: 10px;
+  }
+}

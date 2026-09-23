@@ -1,8 +1,11 @@
 import { buildChapter, groupIndices } from '../data/chapters.js';
 import { escapeHTML, stopPanel } from './render.js';
+import { MOMENT_INTERVAL, nextMoment } from './playback.js';
 
 /** Dirección del recorrido: HTML accesible y un único motor compartido. */
-export function initScene(data) {
+export function initScene(data, goToChapter) {
+  const tourButton = document.querySelector('#play-all');
+  let allPlaying = false;
   const motion = matchMedia('(prefers-reduced-motion: reduce)');
   const states = data.sections.map((section) => ({
     section,
@@ -30,8 +33,17 @@ export function initScene(data) {
     });
   }
   function stopPlayback() {
+    allPlaying = false;
+    updateTourButton();
     if (current) current.wantsPlayback = false;
     suspendPlayback();
+  }
+  function updateTourButton() {
+    tourButton.setAttribute('aria-pressed', String(allPlaying));
+    tourButton.textContent = allPlaying ? 'Ⅱ Pausar todo' : '▷ Reproducir todo';
+    tourButton.title = allPlaying
+      ? 'Pausar la presentación completa'
+      : 'Reproducir todos los capítulos desde el inicio';
   }
   function startPlayback(state) {
     if (
@@ -49,10 +61,35 @@ export function initScene(data) {
     button.setAttribute('aria-label', 'Pausar recorrido');
     button.innerHTML = 'Ⅱ <span>Pausar</span>';
     timer = setInterval(() => {
+      if (allPlaying) {
+        const next = nextMoment(
+          states.map((s) => s.chapter),
+          states.indexOf(state),
+          Math.round(state.position),
+        );
+        if (!next) {
+          stopPlayback();
+          document.querySelector('#app-status').textContent =
+            'Presentación completa. Puedes volver a reproducirla.';
+          return;
+        }
+        if (next.chapterIndex !== states.indexOf(state)) {
+          goToChapter(next.chapterIndex);
+          return;
+        }
+        const nextGroup = state.chapter.stops[next.position].group ?? 0;
+        if (nextGroup !== state.group) {
+          state.group = nextGroup;
+          renderControls(state);
+          select(state, next.position, false);
+          attach(state, true);
+        } else select(state, next.position);
+        return;
+      }
       const ids = groupIndices(state.chapter, state.group);
       const next = Math.round(state.position) + 1;
       select(state, next > ids.at(-1) ? ids[0] : next);
-    }, 6500);
+    }, MOMENT_INTERVAL);
   }
   function fallback(error) {
     stopPlayback();
@@ -113,7 +150,7 @@ export function initScene(data) {
             { opacity: 0.35, transform: 'translateY(8px)' },
             { opacity: 1, transform: 'translateY(0)' },
           ],
-          { duration: 360, easing: 'ease-out' },
+          { duration: 240, easing: 'ease-out' },
         );
     }
     if (current === state)
@@ -234,13 +271,29 @@ export function initScene(data) {
     { threshold: 0.01 },
   );
   states.forEach((s) => visibility.observe(s.root));
-  return {
-    async show(slide) {
+  tourButton.addEventListener('click', () => {
+    if (allPlaying) {
       stopPlayback();
+      return;
+    }
+    stopPlayback();
+    states.forEach((state) => {
+      state.group = 0;
+      renderControls(state);
+      select(state, 0, false);
+    });
+    allPlaying = true;
+    updateTourButton();
+    goToChapter(0);
+  });
+  return {
+    async show(slide, { automatic = false } = {}) {
+      if (automatic) suspendPlayback();
+      else stopPlayback();
       current = states.find((s) => s.section.id === slide.id.slice(6));
       if (!current) return;
       const requested = current;
-      requested.wantsPlayback = !motion.matches;
+      requested.wantsPlayback = allPlaying || !motion.matches;
       await load();
       attach(requested, true);
       startPlayback(requested);

@@ -25,8 +25,12 @@ adecuado para los módulos y modelos. Node se usa solo durante desarrollo.
 - Cada capítulo tiene una escena y botones para sus momentos narrativos.
 - Beneficios: elegir firma o estudiante y explorar sus cuatro beneficios.
 - El deslizador coordina la cámara y la selección del contenido.
+- «Reproducir todo», en el pie de página, empieza desde el capítulo 01 y recorre
+  los 25 momentos hasta terminar el 06, incluidas las dos audiencias de beneficios.
+  «Pausar todo» detiene la presentación; otra pulsación la inicia desde el principio.
+  La navegación manual sale de este modo. Las transiciones de cámara duran 0,7 s.
 - El recorrido arranca automáticamente al entrar en cada capítulo y avanza cada
-  6,5 segundos, repitiendo sus momentos. «Pausar» o una selección manual detienen
+  4 segundos, repitiendo sus momentos. «Pausar» o una selección manual detienen
   el avance. «Recorrer» lo reanuda. Al cambiar de capítulo comienza su recorrido.
 - Al ocultar la página o el capítulo, se suspende y después se reanuda si no se
   había pausado manualmente. El movimiento reducido desactiva el inicio automático.

@@ -12,9 +12,9 @@ export function initNavigation(sections, onChange) {
   const previous = document.querySelector('#previous');
   const next = document.querySelector('#next');
   const count = document.querySelector('#page-count');
-  function show(index, { historyMode = 'push', focus = true } = {}) {
+  function show(index, { historyMode = 'push', focus = true, automatic = false, force = false } = {}) {
     index = boundedIndex(index, sections.length);
-    if (index === current) return;
+    if (index === current && !force) return;
     current = index;
     slides.forEach((slide, i) => { slide.hidden = i !== index; });
     links.forEach((link, i) => {
@@ -32,7 +32,7 @@ export function initNavigation(sections, onChange) {
     window.scrollTo({ top: 0, behavior: 'instant' });
     if (focus) slides[index].querySelector('h1')?.focus({ preventScroll: true });
     links[index].scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'instant' });
-    onChange?.(slides[index]);
+    onChange?.(slides[index], { automatic });
   }
   document.addEventListener('click', event => {
     const link = event.target.closest('a[href^="#"]');

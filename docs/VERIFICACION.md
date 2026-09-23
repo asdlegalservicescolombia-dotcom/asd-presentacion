@@ -49,3 +49,12 @@ segundos y repetición al llegar al final del grupo. La selección manual o Paus
 cancelan la reproducción; salir de la vista solo la suspende. La preferencia de
 movimiento reducido conserva inicio manual. Se observó avance automático del
 cierre y funcionamiento del botón de pausa. Las 13 pruebas existentes pasan.
+# Reproducción completa y ritmo más rápido
+
+- Intervalo de 4 segundos por momento; transición de cámara de 0,7 segundos.
+- Nuevo control global «Reproducir todo» / «Pausar todo».
+- El recorrido comienza desde 01 e incluye ambas audiencias de beneficios.
+- Prueba automatizada: visita los 25 momentos en orden y termina sin repetir el 06.
+- Navegador: avance automático entre capítulos y cambio a la segunda audiencia.
+- Móvil de 320 px: botón y paginación dentro del ancho disponible, sin desbordamiento.
+- `node --test`: 15 pruebas aprobadas.

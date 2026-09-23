@@ -187,7 +187,7 @@ export async function createScene(onFailure) {
     if (animate && active)
       tween = window.gsap.to(pose, {
         ...next,
-        duration: 1.25,
+        duration: 0.7,
         ease: 'power2.inOut',
         onUpdate: draw,
       });
