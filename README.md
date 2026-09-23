@@ -9,6 +9,11 @@ HTML, CSS y JavaScript modular. Three.js y GSAP están incluidos localmente en
 
 ## Ejecutar
 
+**En Windows:** haz doble clic en `Abrir-presentacion.cmd`. Inicia el servidor
+en segundo plano y abre la presentación. Reutiliza el servidor si ya está activo.
+Usa Node.js 20 o superior; en este equipo también puede usar el runtime instalado
+por Codex. No abras `index.html` directamente.
+
 Con Node.js 20 o superior, desde esta carpeta:
 
 ```sh

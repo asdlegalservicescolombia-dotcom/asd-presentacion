@@ -697,3 +697,16 @@
     font-size: 10px;
   }
 }
+.startup-message {
+  max-width: 760px;
+  padding: clamp(24px, 6vw, 80px);
+  margin: auto;
+}
+.startup-message h1 {
+  font-size: clamp(26px, 4vw, 44px);
+  line-height: 1.2;
+}
+.startup-message p {
+  margin-block: 24px;
+  line-height: 1.7;
+}
